@@ -11,16 +11,18 @@ import {
 import { LogOut, User } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import { SignInButton } from "@/features/auth/sign-in-button";
 import { useSignOut } from "@/features/auth/use-sign-out";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { useAppSession } from "@/entities/session/use-app-session";
-import { AvatarImage } from "@/shared/ui/avatar";
+import { getProfileDisplayName, ProfileAvatar } from "@/entities/user/profile";
+import { useAppSession, useRole } from "@/entities/user/session";
 
 export function Profile() {
   const session = useAppSession();
+
   const { signOut, isPending: isLoadingSignOut } = useSignOut();
+
+  console.log(useRole());
 
   if (session.status === "loading") {
     return <Skeleton className="w-8 h-8 rounded-full" />;
@@ -30,6 +32,8 @@ export function Profile() {
     return <SignInButton />;
   }
 
+  const user = session.data?.user;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,17 +41,14 @@ export function Profile() {
           variant="ghost"
           className="p-px rounded-full self-center h-8 w-8"
         >
-          <Avatar className="w-8 h-8">
-            <AvatarImage src={session.data?.user?.image} />
-            <AvatarFallback>AC</AvatarFallback>
-          </Avatar>
+          <ProfileAvatar profile={user} className="w-8 h-8" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mr-2 ">
         <DropdownMenuLabel>
           <p>Мой аккаунт</p>
           <p className="text-xs text-muted-foreground overflow-hidden text-ellipsis">
-            {session.data?.user?.name}
+            {user && getProfileDisplayName(user)}
           </p>
         </DropdownMenuLabel>
         <DropdownMenuGroup></DropdownMenuGroup>
