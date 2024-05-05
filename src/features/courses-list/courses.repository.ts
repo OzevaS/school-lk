@@ -7,9 +7,10 @@ import {
 } from "./model/types";
 
 class CoursesRepository {
-  getCoursesList = cache(
-    (): Promise<CourseListElement[]> => dbClient.course.findMany(),
-  );
+  getCoursesList = cache((): Promise<CourseListElement[]> => {
+    console.log("GET COURESES LSIT");
+    return dbClient.course.findMany();
+  });
 
   createCourseElement = (
     command: CreateCourseListElementCommand,
