@@ -9,5 +9,5 @@ export const createCourseAction = async (
   revalidatePagePath: string,
 ) => {
   await coursesRepository.createCourseElement(command);
-    revalidatePath(revalidatePagePath);
+  revalidatePath(revalidatePagePath);
 };
