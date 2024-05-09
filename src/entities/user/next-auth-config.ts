@@ -4,7 +4,7 @@ import { dbClient } from "@/shared/lib/db";
 import { compact } from "lodash-es";
 import EmailProvider from "next-auth/providers/email";
 import { privateConfig } from "@/shared/config/private";
-import { createUserUseCase } from "./_use-cases/create-user";
+import { createUserService } from "./_services/create-user";
 
 const prismaAdapter = PrismaAdapter(dbClient);
 
@@ -20,7 +20,7 @@ export const nextAuthConfig: AuthOptions = {
   adapter: {
     ...prismaAdapter,
     createUser: (user) => {
-      return createUserUseCase.exec(user);
+      return createUserService.exec(user);
     },
   } as AuthOptions["adapter"],
   callbacks: {
