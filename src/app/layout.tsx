@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/shared/ui/utils";
 import { AppProvider } from "./_providers/app-provider";
+import { Toaster } from "@/shared/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,10 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
+        <Toaster />
         <AppProvider>{children}</AppProvider>
       </body>
     </html>

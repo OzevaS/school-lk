@@ -5,6 +5,7 @@ import { compact } from "lodash-es";
 import EmailProvider from "next-auth/providers/email";
 import { privateConfig } from "@/shared/config/private";
 import { createUserService } from "./_services/create-user";
+import { UserEntity } from "./_domain/types";
 
 const prismaAdapter = PrismaAdapter(dbClient);
 
@@ -17,10 +18,17 @@ const emailToken = privateConfig.TEST_EMAIL_TOKEN
   : {};
 
 export const nextAuthConfig: AuthOptions = {
+  // adapter: prismaAdapter as AuthOptions["adapter"],
   adapter: {
     ...prismaAdapter,
     createUser: (user) => {
-      return createUserService.exec(user);
+      return createUserService.exec({
+        ...user,
+        name: "Roma",
+      }) as Promise<
+        UserEntity & { id: string } // костыль, чтобы next-auth не выдал ошибку, тк id у меня в базе int, а он хочет string
+        // но работает норм и с int
+      >;
     },
   } as AuthOptions["adapter"],
   callbacks: {

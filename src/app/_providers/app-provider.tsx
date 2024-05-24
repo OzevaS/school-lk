@@ -3,6 +3,7 @@ import { AppSessionProvider } from "@/entities/user/session";
 import { ThemeProvider } from "@/features/theme/theme-provider";
 import { queryClient } from "@/shared/api/query-client";
 import { ComposeChildren } from "@/shared/lib/react";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -11,7 +12,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider />
       <AppSessionProvider />
       <QueryClientProvider client={queryClient} />
-      {children}
+      <TooltipProvider>{children}</TooltipProvider>
     </ComposeChildren>
   );
 };

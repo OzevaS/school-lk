@@ -1,10 +1,10 @@
 import { test as setup, expect } from "@playwright/test";
-import { ADMIN, USER } from "../stabs/users";
-import { adminFile, userFile } from "../constants";
+import { ADMIN, STUDENT } from "../stabs/users";
+import { staffFile, studentFile } from "../constants";
 
 setup.describe.configure({ mode: "serial" });
 setup.describe("auth", () => {
-  setup("authenticate as admin", async ({ page }) => {
+  setup("authenticate as staff", async ({ page }) => {
     await page.goto("/auth/sign-in?callbackUrl=/");
     await page.getByLabel("Email").fill(ADMIN.email);
     await page.getByRole("button", { name: "Войти через Email" }).click();
@@ -13,18 +13,18 @@ setup.describe("auth", () => {
     await page.waitForURL("/");
     await expect(page.getByRole("button", { name: "AD" })).toBeVisible();
 
-    await page.context().storageState({ path: adminFile });
+    await page.context().storageState({ path: staffFile });
   });
 
-  setup("authenticate as user", async ({ page }) => {
+  setup("authenticate as student", async ({ page }) => {
     await page.goto("/auth/sign-in?callbackUrl=/");
-    await page.getByLabel("Email").fill(USER.email);
+    await page.getByLabel("Email").fill(STUDENT.email);
     await page.getByRole("button", { name: "Войти через Email" }).click();
     // To handle verification emails
     await page.getByRole("link", { name: "Упрощённый тестовый вход" }).click();
     await page.waitForURL("/");
     await expect(page.getByRole("button", { name: "US" })).toBeVisible();
 
-    await page.context().storageState({ path: userFile });
+    await page.context().storageState({ path: studentFile });
   });
 });

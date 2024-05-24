@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { adminFile, userFile } from "./constants";
+import { staffFile, studentFile } from "./constants";
 import { ADMIN } from "./stabs/users";
 
 test.describe("update-profile as admin", () => {
-  test.use({ storageState: adminFile });
+  test.use({ storageState: staffFile });
   test("update username", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "AD" }).click();
@@ -46,7 +46,7 @@ test.describe("update-profile as admin", () => {
 });
 
 test.describe("update-profile as user", () => {
-  test.use({ storageState: userFile });
+  test.use({ storageState: studentFile });
   test("update username", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "US" }).click();

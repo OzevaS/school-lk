@@ -6,7 +6,7 @@ import { getAppSessionStrictServer } from "../get-app-session.server";
 import { profileSchema } from "../_domain/schema";
 
 const propsSchema = z.object({
-  userId: z.string(),
+  userId: z.number(),
 });
 
 const resultSchema = z.object({

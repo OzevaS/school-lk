@@ -21,7 +21,7 @@ model Course {
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @map("user_id")
+  userId            Int     @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -42,7 +42,7 @@ model Account {
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
+  userId       Int      @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -50,14 +50,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  role          ROLE      @default(USER)
+  id            Int       @id @default(autoincrement())
+  role          ROLE      @default(GUEST)
   email         String    @unique
-  name          String?
+  name          String
+  phone         String?
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Staff         Staff[]
+  Student       Student[]
 
   @@map("users")
 }
@@ -73,5 +76,137 @@ model VerificationToken {
 
 enum ROLE {
   ADMIN
-  USER
+  TEACHER
+  STUDENT
+  GUEST
+}
+
+model Staff {
+  id           Int            @id @default(autoincrement())
+  user_id      Int
+  User         User           @relation(fields: [user_id], references: [id])
+  Class        Class[]
+  Announcement Announcement[]
+  Homework     Homework[]
+  ClassSubject ClassSubject[]
+
+  @@map("staff")
+}
+
+model Class {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  teacher_id        Int?
+  Staff             Staff?              @relation(fields: [teacher_id], references: [id])
+  Student           Student[]
+  Subject           ClassSubject[]
+  AnnouncementClass AnnouncementClass[]
+  Homework          Homework[]
+  Lesson            Lesson[]
+
+  @@map("class")
+}
+
+model SubjectType {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  ClassSubject ClassSubject[]
+
+  @@map("subject_type")
+}
+
+model ClassSubject {
+  id          Int         @id @default(autoincrement())
+  type_id     Int
+  teacher_id  Int?
+  class_id    Int
+  SubjectType SubjectType @relation(fields: [type_id], references: [id])
+  Staff       Staff?      @relation(fields: [teacher_id], references: [id])
+  Class       Class       @relation(fields: [class_id], references: [id])
+  Grade       Grade[]
+  Homework    Homework[]
+  Lesson      Lesson[]
+
+  @@unique([type_id, class_id])
+  @@map("class_subject")
+}
+
+model Student {
+  id       Int     @id @default(autoincrement())
+  user_id  Int
+  class_id Int?
+  User     User    @relation(fields: [user_id], references: [id])
+  Class    Class?  @relation(fields: [class_id], references: [id])
+  Grade    Grade[]
+
+  @@map("student")
+}
+
+model Grade {
+  id                      Int          @id @default(autoincrement())
+  grade                   Int?
+  date                    DateTime?
+  teacher_comment         String?
+  student_comment         String?
+  completed_homework_file String?
+  student_id              Int
+  subject_id              Int
+  homework_id             Int?         @unique
+  Student                 Student      @relation(fields: [student_id], references: [id])
+  Subject                 ClassSubject @relation(fields: [subject_id], references: [id])
+  Homework                Homework?    @relation(fields: [homework_id], references: [id])
+
+  @@map("grade")
+}
+
+model Announcement {
+  id                Int                 @id @default(autoincrement())
+  title             String
+  message           String
+  date_published    DateTime            @default(now())
+  staff_id          Int
+  Staff             Staff               @relation(fields: [staff_id], references: [id])
+  AnnouncementClass AnnouncementClass[]
+
+  @@map("announcement")
+}
+
+model AnnouncementClass {
+  announcement_id Int
+  class_id        Int
+  Announcement    Announcement @relation(fields: [announcement_id], references: [id])
+  Class           Class        @relation(fields: [class_id], references: [id])
+
+  @@id([announcement_id, class_id])
+  @@map("announcement_class")
+}
+
+model Homework {
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String
+  deadline      DateTime
+  homework_file String?
+  subject_id    Int
+  class_id      Int
+  teacher_id    Int
+  Staff         Staff        @relation(fields: [teacher_id], references: [id])
+  Class         Class        @relation(fields: [class_id], references: [id])
+  Subject       ClassSubject @relation(fields: [subject_id], references: [id])
+  Grade         Grade[]
+
+  @@map("homework")
+}
+
+model Lesson {
+  id            Int          @id @default(autoincrement())
+  day_of_week   Int
+  lesson_number Int
+  class_id      Int
+  subject_id    Int
+  Class         Class        @relation(fields: [class_id], references: [id])
+  Subject       ClassSubject @relation(fields: [subject_id], references: [id])
+
+  @@unique([class_id, day_of_week, lesson_number])
+  @@map("lesson")
 }

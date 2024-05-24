@@ -5,7 +5,7 @@ import { privateConfig } from "@/shared/config/private";
 
 type CreateUser = {
   email: string;
-  name?: string | null;
+  name: string;
   image?: string | null;
   emailVerified?: Date | null;
 };
@@ -13,10 +13,9 @@ type CreateUser = {
 export class CreateUserService {
   async exec(data: CreateUser) {
     const adminEmails = privateConfig.ADMIN_EMAILS?.split(",") ?? [];
-    const role = adminEmails.includes(data.email) ? ROLES.ADMIN : ROLES.USER;
+    const role = adminEmails.includes(data.email) ? ROLES.ADMIN : ROLES.GUEST;
 
-    const user: UserEntity = {
-      id: createId(),
+    const user: Omit<UserEntity, "id"> = {
       role,
       ...data,
     };

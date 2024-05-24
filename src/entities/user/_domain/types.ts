@@ -1,17 +1,19 @@
-export type UserId = string;
-export type Role = "ADMIN" | "USER";
+export type UserId = number;
+export type Role = "ADMIN" | "TEACHER" | "STUDENT" | "GUEST";
 
 export const ROLES: Record<Role, Role> = {
   ADMIN: "ADMIN",
-  USER: "USER",
+  TEACHER: "TEACHER",
+  STUDENT: "STUDENT",
+  GUEST: "GUEST",
 };
 
 export type UserEntity = {
   id: UserId;
   email: string;
   role: Role;
+  name: string;
   emailVerified?: Date | null;
-  name?: string | null;
   image?: string | null;
 };
 
@@ -21,7 +23,7 @@ export type SessionEntity = {
     id: UserId;
     email: string;
     role: Role;
-    name?: string | null;
+    name: string;
     image?: string | null;
   };
   expires: string;
@@ -31,6 +33,6 @@ export type SessionEntity = {
 
 export type Profile = {
   email: string;
-  name?: string | null;
+  name: string;
   image?: string | null;
 };

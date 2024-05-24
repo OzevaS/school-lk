@@ -1,4 +1,6 @@
 import { AppHeader } from "@/widgets/app-header/app-header";
+import { AppLayout } from "@/widgets/app-layout/app-layout";
+import { AppSideBar } from "@/widgets/app-side-bar/app-side-bar";
 
 export default async function Layout({
   children,
@@ -6,9 +8,10 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <AppHeader variant="public" />
-      {children}
-    </>
+    <AppLayout
+      header={<AppHeader variant="admin" />}
+      sidebar={<AppSideBar variant="admin" />}
+      content={children}
+    />
   );
 }

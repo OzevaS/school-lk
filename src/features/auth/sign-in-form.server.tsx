@@ -7,6 +7,7 @@ import { Divider } from "./_ui/divider";
 import { ProviderButton } from "./_ui/provider-button";
 import { privateConfig } from "@/shared/config/private";
 import { TestEmailSignInForm } from "./_ui/test-email-sign-in-form";
+import { Suspense } from "react";
 
 export async function SignInForm({ className }: { className?: string }) {
   const providers = await getProviders();
@@ -18,19 +19,21 @@ export async function SignInForm({ className }: { className?: string }) {
 
   return (
     <div className={cn("grid gap-6", className)}>
-      {testToken ? (
-        <TestEmailSignInForm testToken={testToken} />
-      ) : (
-        <EmailSignInForm />
-      )}
-      {oauthProviders.length > 0 && (
-        <>
-          <Divider />
-          {oauthProviders.map((provider) => (
-            <ProviderButton key={provider.id} provider={provider} />
-          ))}
-        </>
-      )}
+      <Suspense>
+        {testToken ? (
+          <TestEmailSignInForm testToken={testToken} />
+        ) : (
+          <EmailSignInForm />
+        )}
+        {oauthProviders.length > 0 && (
+          <>
+            <Divider />
+            {oauthProviders.map((provider) => (
+              <ProviderButton key={provider.id} provider={provider} />
+            ))}
+          </>
+        )}
+      </Suspense>
     </div>
   );
 }

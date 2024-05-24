@@ -9,7 +9,7 @@ export function UpdateProfileForm({
   userId,
   callbackUrl,
 }: {
-  userId: string;
+  userId: number;
   callbackUrl?: string;
 }) {
   const router = useRouter();
@@ -17,7 +17,7 @@ export function UpdateProfileForm({
     ...getProfileQuery(userId),
     retry: 0,
   });
-
+console.log("USER ID", typeof userId)
   const handleSuccess = () => {
     if (callbackUrl) {
       router.push(callbackUrl);

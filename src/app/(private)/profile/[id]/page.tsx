@@ -14,7 +14,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         </p>
       </div>
       <Separator />
-      <UpdateProfileForm userId={params.id} />
+      <UpdateProfileForm userId={Number(params.id)} />
     </main>
   );
 }

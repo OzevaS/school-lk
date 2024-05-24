@@ -7,7 +7,7 @@ import { getAppSessionStrictServer } from "@/entities/user/session.server";
 import { updateProfileService } from "@/entities/user/profile.server";
 
 const propsSchema = z.object({
-  userId: z.string(),
+  userId: z.number(),
   data: profileSchema.partial(),
 });
 
